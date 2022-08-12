@@ -8,9 +8,9 @@ namespace MediatRCQRS.Profiles
 {
   public class MappingProfile : Profile
   {
-    public void AutoMapperProfile()
+    public MappingProfile()
     {
-      CreateMap<Todo, GetAllTodoResponseDto>();
+      CreateMap<CreateTodoRequestDto, Todo>().ReverseMap();
     }
   }
 }

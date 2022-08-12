@@ -29,7 +29,6 @@ namespace MediatRCQRS.Controllers
       {
         var response = await _mediator.Send(new GetAllTodoQuery());
         return Ok(response);
-        //return _mapper.Map<List<GetAllTodoResponseDto>>(response);
       }
       catch (Exception ex)
       {
@@ -52,12 +51,14 @@ namespace MediatRCQRS.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(AddToDoCommand command)
+    public async Task<IActionResult> Create(CreateTodoRequestDto newtodo)
     {
       try
       {
-        //var todo = _mapper.Map<Todo>(newtodo);
-        var response = await _mediator.Send(command);
+        var todo = _mapper.Map<Todo>(newtodo);
+        var response = await _mediator.Send(new AddToDoCommand { 
+          Todo = todo        
+        });
         return Ok(response);
       }
       catch (Exception ex)

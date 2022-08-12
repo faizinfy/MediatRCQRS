@@ -3,6 +3,8 @@ using MediatRCQRS.Controllers;
 using MediatRCQRS.Repository;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
+using AutoMapper;
+using MediatRCQRS.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(TodoController));
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddMediatR(typeof(Program).Assembly);
 
