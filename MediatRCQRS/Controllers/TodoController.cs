@@ -6,12 +6,15 @@ using MediatRCQRS.Queries;
 using MediatRCQRS.Dto;
 using MediatR;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using MediatRCQRS.ViewModels;
 
 namespace MediatRCQRS.Controllers
 {
+  [Authorize(Roles = UserRoles.User)]
   [ApiController]
-  [Route("[controller]/[action]")]
-  public class TodoController : Controller
+  [Route("api/[controller]/[action]")]
+  public class TodoController : ControllerBase
   {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
