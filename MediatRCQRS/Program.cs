@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using WatchDog;
+using WatchDog.src.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -63,17 +65,17 @@ builder.Services.AddSwaggerGen(option =>
   });
   option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
+      {
+        new OpenApiSecurityScheme
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
+          Reference = new OpenApiReference
+          {
+            Type=ReferenceType.SecurityScheme,
+            Id="Bearer"
+          }
+        },
+        new string[]{}
+      }
     });
 });
 
@@ -83,6 +85,12 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 
 builder.Services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<ITodoRepository, TodoRepository>();
+
+builder.Services.AddWatchDogServices(opt =>
+{
+  opt.ClearTimeSchedule = WatchDogAutoClearScheduleEnum.Weekly;
+  opt.IsAutoClear = true;
+});
 
 var app = builder.Build();
 
@@ -100,5 +108,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseWatchDog(opt =>
+{
+  opt.WatchPageUsername = "root";
+  opt.WatchPagePassword = "root";
+});
+
+app.UseWatchDogExceptionLogger();
 
 app.Run();

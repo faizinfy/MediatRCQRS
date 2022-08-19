@@ -8,6 +8,7 @@ using MediatR;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using MediatRCQRS.ViewModels;
+using WatchDog;
 
 namespace MediatRCQRS.Controllers
 {
@@ -31,6 +32,7 @@ namespace MediatRCQRS.Controllers
       try
       {
         var response = await _mediator.Send(new GetAllTodoQuery());
+        WatchLogger.Log("Success get all Todo list.");
         return Ok(response);
       }
       catch (Exception ex)
@@ -45,10 +47,12 @@ namespace MediatRCQRS.Controllers
       try
       {
         var response = await _mediator.Send(new GetTodoByIdQuery(id));
+        WatchLogger.Log("Success!!");
         return Ok(response);
       }
       catch (Exception ex)
       {
+        WatchLogger.Log("Error!!");
         return BadRequest(ex.Message);
       }
     }
@@ -70,7 +74,7 @@ namespace MediatRCQRS.Controllers
       }
     }
 
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> Update(int id, UpdateTodoCommand command)
     {
       try
